@@ -5,6 +5,10 @@
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
+      "python.defaultInterpreterPath": "lib/venv/bin/python",
+      "python.analysis.extraPaths": [
+        "lib/venv/lib64/python3.13/site-packages"
+      ],
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
