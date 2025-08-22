@@ -55,5 +55,9 @@
   "C_Cpp_Runner.useLeakSanitizer": false,
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
-  "C_Cpp_Runner.msvcSecureNoWarnings": false
+  "C_Cpp_Runner.msvcSecureNoWarnings": false,
+  "python.defaultInterpreterPath": "lib/venv/bin/python",
+  "python.analysis.extraPaths": [
+        "lib/venv/lib64/python3.13/site-packages"
+  ]
 }
