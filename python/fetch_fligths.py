@@ -1,9 +1,17 @@
-import sys
-from opensky_api import OpenSkyApi
+import requests 
+import time
+import json
 
-api = OpenSkyApi()
+# Local Time (s)
+local_time = time.localtime()
+# print(local_time)
 
-print("Python executable in use:", sys.executable)
-state = api.get_states()
+# Dataset, restituisce una Response, per leggerla come un JSON : dataset.json()
+dataset = requests.get('https://opensky-network.org/api/states/all')
 
-print(state)
+# Scrittura del dataset all'interno di un file JSON
+with open('data/data.json', 'w') as outfile:
+    # Scrittura dei dati
+    json.dump(dataset.json(), outfile)
+
+

@@ -5,11 +5,18 @@
 
 int main(void)
 {
+
+    if(SDL_Init(SDL_INIT_VIDEO) != 0){
+        printf("Errore di setup per SDL\n");
+        return 1;
+    }
+
     // Creazione della window
     SDL_Window* window = createWindow();
 
     if (window == NULL) {
         printf("Errore in apertura della finestra \n");
+        SDL_Quit();
         return 0;
     }
 
@@ -17,16 +24,39 @@ int main(void)
 
     if (renderer == NULL){
         printf("Errore in fase di creazione del renderer \n");
+        SDL_Quit();
         return 0;
     }
 
+    SDL_Event event;
+    int running = 1;
+
+    // Interazione utente scelta dei fligths da visulaizzare (filtrati per paese)
+    printf("Inserire i voli di quale paese visualizzare: \n");
+    char nation[5] = "italia";
+
+    while(running){
+        while(SDL_PollEvent(&event)){
+            if (event.type = SDL_Quit){
+                printf("Chiusura del programma \n");
+                running = 0;
+            }
+
+            // Imposta colore sfondo
+            SDL_SetRenderDrawColor(renderer,0,0,0,255);
+            // Pulisce il frame precedente
+            SDL_RenderClear(renderer);
+
+            // Presenta il nuovo frame
+            SDL_RenderPresent(renderer);
+        }
+    }
+
     
-
-
-
     // Distruzione di finestra e renderer
-    destroyWindow(window);
-    destroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    SDL_Quit();
 
     return 0;
 }

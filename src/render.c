@@ -8,8 +8,20 @@ SDL_Renderer* createRenderer(SDL_Window* window)
     return renderer;
 }
 
-// Metodo per la distruzione del renderer
-void destroyRenderer(SDL_Renderer* renderer)
+void drawPoint(SDL_Renderer* renderer, Point* point)
 {
-    SDL_DestroyRenderer(renderer);
+    // Trasformazione adeguata dei punti tridimensionali
+
+    // Oggetto SDL forma "Rettangolo"
+    SDL_Rect rect = (SDL_Rect){point->x, point->y};
+
+    // Colore per disegnare il punto e stampa
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderDrawRect(renderer, &rect);
 }
+
+void drawEarth(SDL_Renderer* renderer){
+
+}
+
+

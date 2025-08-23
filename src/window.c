@@ -16,11 +16,7 @@ SDL_Window* createWindow (void)
     return window;
 }
 
-// Metodo per la distruzione della finestra
-void destroyWindow(SDL_Window* window)
-{
-    SDL_DestroyWindow(window);
-}
+
 
 
 

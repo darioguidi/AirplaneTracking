@@ -4,3 +4,5 @@
 
 #define window_width 500
 #define window_height 500
+
+SDL_Window* createWindow (void);
