@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
-#include "window.c"
-#include "render.c"
+#include "window.h"
+#include "render.h"
 
 int main(void)
 {
@@ -33,11 +33,10 @@ int main(void)
 
     // Interazione utente scelta dei fligths da visulaizzare (filtrati per paese)
     printf("Inserire i voli di quale paese visualizzare: \n");
-    char nation[5] = "italia";
 
     while(running){
         while(SDL_PollEvent(&event)){
-            if (event.type = SDL_Quit){
+            if (event.type == SDL_QUIT){
                 printf("Chiusura del programma \n");
                 running = 0;
             }
@@ -46,6 +45,9 @@ int main(void)
             SDL_SetRenderDrawColor(renderer,0,0,0,255);
             // Pulisce il frame precedente
             SDL_RenderClear(renderer);
+
+            // Avvio del rendering
+            drawEarth(renderer);
 
             // Presenta il nuovo frame
             SDL_RenderPresent(renderer);

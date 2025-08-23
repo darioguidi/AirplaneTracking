@@ -1,6 +1,10 @@
 // Gestione del disegno in fase di rendering
 #include <stdio.h>
 #include <SDL2/SDL.h>
+#include "window.h"
+
+#define PI 3.14
+#define SIZE_POINT 2
 
 typedef struct{
     int x;
@@ -15,3 +19,4 @@ SDL_Renderer* createRenderer(SDL_Window* window);
 void drawPoint(SDL_Renderer* renderer, Point* point);
 
 // Disegno del globo
+void drawEarth(SDL_Renderer* renderer);

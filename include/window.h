@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 
-#define window_width 500
-#define window_height 500
+#define WINDOW_WIDTH 500
+#define WINDOW_HEIGHT 500
 
 SDL_Window* createWindow (void);
