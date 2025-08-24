@@ -10,6 +10,7 @@ typedef struct{
     int x;
     int y;
     int z;
+    char type;
 } Point;
 
 // Creazione della finestra

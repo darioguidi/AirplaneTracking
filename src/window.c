@@ -8,8 +8,8 @@ SDL_Window* createWindow (void)
         "Airplane Tracking",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        WINDOW_WIDTH,
-        WINDOW_HEIGHT,
+        900,
+        900,
         SDL_WINDOW_RESIZABLE
     );
 
