@@ -20,8 +20,10 @@ void drawPoint(SDL_Renderer* renderer, Point* point)
     /// Definizione dei "punti proiettati"
     float scale = 200.0; // distanza della camera
 
-    float x_proj = point->x / (point->z / scale + 1.0);
-    float y_proj = point->y / (point->z / scale + 1.0);
+    float denom = (point->z / scale + 1.0f);
+    if (denom <= 0.1f) denom = 0.1f; 
+    float x_proj = point->x / denom;
+    float y_proj = point->y / denom;
     float x_delta = x_proj + offset_x;
     float y_delta = -y_proj + offset_y;
 
@@ -30,47 +32,37 @@ void drawPoint(SDL_Renderer* renderer, Point* point)
 
     // Colore per disegnare il punto e stampa
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderDrawRect(renderer, &rect);
+    SDL_RenderFillRect(renderer, &rect);
 }
 
 void drawEarth(SDL_Renderer* renderer)
 {
-    // Coordinate centro sfera
-    float x_center = WINDOW_WIDTH/2;
-    float y_center = WINDOW_HEIGHT/2;
-    float z_center = 0;
+    int max_point_sphere = 200; 
+    Point* sphere = malloc(max_point_sphere * sizeof(Point));
 
-    // Numero totale di punti da dover rappresentare sulla sfera
-    int max_point_sphere = 500;
-    Point* sphere = malloc(max_point_sphere*sizeof(Point));
+    float raggio = WINDOW_WIDTH / 3.0f;
+    float z_center = 500.0f;
 
-    // Generazione dei punti globalidi una sfera centrata nella finestra 
-    float raggio = WINDOW_WIDTH/2;
-    float theta = 0;
-    float phi = 0;
+    const float golden_angle = PI * (3.0f - sqrtf(5.0f));
 
-    int n_phi = 50;                         
-    int n_theta = max_point_sphere / n_phi; 
+    for (int i = 0; i < max_point_sphere; i++) {
+        float y = 1.0f - (i / (float)(max_point_sphere - 1)) * 2.0f; // da 1 a -1
+        float radius = sqrtf(1.0f - y * y);
 
-    float delta_theta = PI / (n_theta - 1);
-    float delta_phi = 2 * PI / n_phi;
+        float theta = golden_angle * i;
 
-    for(int i=0; i<max_point_sphere; i++){
+        float x = cosf(theta) * radius;
+        float z = sinf(theta) * radius;
 
-        int theta_idx = i / n_phi;
-        int phi_idx = i % n_phi;
-
-        theta = theta_idx * delta_theta;
-        phi = phi_idx * delta_phi;
-
-        sphere[i].x = x_center + raggio * sinf(theta) * cosf(phi);
-        sphere[i].y = y_center + raggio * sinf(theta) * sinf(phi);
-        sphere[i].z = z_center + raggio * cosf(theta);
+        sphere[i].x = raggio * x;
+        sphere[i].y = raggio * y;
+        sphere[i].z = z_center + raggio * z;
 
         drawPoint(renderer, &sphere[i]);
     }
     free(sphere);
 }
+
 
 
 
