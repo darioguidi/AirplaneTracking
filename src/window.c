@@ -10,7 +10,7 @@ SDL_Window* createWindow (void)
         SDL_WINDOWPOS_CENTERED,
         WINDOW_WIDTH,
         WINDOW_HEIGHT,
-        0
+        SDL_WINDOW_RESIZABLE
     );
 
     return window;

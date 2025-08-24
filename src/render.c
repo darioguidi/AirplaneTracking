@@ -17,8 +17,6 @@ void drawPoint(SDL_Renderer* renderer, Point* point)
     float offset_x = WINDOW_WIDTH/2;
     float offset_y = WINDOW_HEIGHT/2;
 
-    /// Rotazione del globo
-
     /// Definizione dei "punti proiettati"
     float scale = 200.0; // distanza della camera
 
@@ -40,27 +38,39 @@ void drawEarth(SDL_Renderer* renderer)
     // Coordinate centro sfera
     float x_center = WINDOW_WIDTH/2;
     float y_center = WINDOW_HEIGHT/2;
-    float z_center = 1;
+    float z_center = 0;
 
     // Numero totale di punti da dover rappresentare sulla sfera
-    int max_point_sphere = 200;
+    int max_point_sphere = 500;
     Point* sphere = malloc(max_point_sphere*sizeof(Point));
 
     // Generazione dei punti globalidi una sfera centrata nella finestra 
     float raggio = WINDOW_WIDTH/2;
+    float theta = 0;
+    float phi = 0;
+
+    int n_phi = 50;                          // Suddivisioni angolo phi
+    int n_theta = max_point_sphere / n_phi; // Suddivisioni angolo theta
+
+    float delta_theta = PI / (n_theta - 1);
+    float delta_phi = 2 * PI / n_phi;
 
     for(int i=0; i<max_point_sphere; i++){
-        float z = 1.0f - 2.0f*i/(max_point_sphere);
-        float r = sqrtf(1 - z*z);
-        float phi = PI * (1 + sqrtf(5)) * i;
 
-        sphere[i].x = x_center + raggio * r * cosf(phi);
-        sphere[i].y = y_center + raggio * r * sinf(phi);
-        sphere[i].z = z_center + raggio * z;
+        int theta_idx = i / n_phi;
+        int phi_idx = i % n_phi;
+
+        theta = theta_idx * delta_theta;
+        phi = phi_idx * delta_phi;
+
+        sphere[i].x = x_center + raggio * sinf(theta) * cosf(phi);
+        sphere[i].y = y_center + raggio * sinf(theta) * sinf(phi);
+        sphere[i].z = z_center + raggio * cosf(theta);
 
         drawPoint(renderer, &sphere[i]);
     }
     free(sphere);
 }
+
 
 
