@@ -40,18 +40,18 @@ int main(void)
                 printf("Chiusura del programma \n");
                 running = 0;
             }
-
-            // Imposta colore sfondo
-            SDL_SetRenderDrawColor(renderer,0,0,0,255);
-            // Pulisce il frame precedente
-            SDL_RenderClear(renderer);
-
-            // Avvio del rendering
-            drawEarth(renderer);
-
-            // Presenta il nuovo frame
-            SDL_RenderPresent(renderer);
         }
+
+        // Imposta colore sfondo
+        SDL_SetRenderDrawColor(renderer,0,0,0,255);
+        // Pulisce il frame precedente
+        SDL_RenderClear(renderer);
+
+        // Avvio del rendering
+        drawEarth(renderer);
+
+        // Presenta il nuovo frame
+        SDL_RenderPresent(renderer);
     }
 
     

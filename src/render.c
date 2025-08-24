@@ -49,8 +49,8 @@ void drawEarth(SDL_Renderer* renderer)
     float theta = 0;
     float phi = 0;
 
-    int n_phi = 50;                          // Suddivisioni angolo phi
-    int n_theta = max_point_sphere / n_phi; // Suddivisioni angolo theta
+    int n_phi = 50;                         
+    int n_theta = max_point_sphere / n_phi; 
 
     float delta_theta = PI / (n_theta - 1);
     float delta_phi = 2 * PI / n_phi;
