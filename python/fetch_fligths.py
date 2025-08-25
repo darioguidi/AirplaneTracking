@@ -30,7 +30,9 @@ with open('data/data.json', mode='r') as infile:
             user_data.append(state)
 
 # Scrittura degli states filtrati
-with open('data/data.json', mode='w') as outfile:
-    # Scrittura dei dati filtrati
-    json.dump(user_data, outfile)
-    
+with open('data/data.txt', mode='w') as outfile:
+    for state in user_data:  # user_data contiene solo stati filtrati
+        # Scrivi solo i valori separati da spazio
+        outfile.write(f"{state[5]} {state[6]} {state[7]}\n")
+
+

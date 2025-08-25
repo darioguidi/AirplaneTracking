@@ -53,7 +53,16 @@ int main(void)
     system(comando);
 
     // Lettura del fetch dei dati, associandolo ad un array
-    FILE* f = fopen("data/data.json", "r");
+    FILE* data = fopen("data/data.txt", "r");
+
+    if(data==NULL){
+        printf("Errore in creazione oggetto di tipo FILE\n");
+        return 0;
+    }
+
+    // Buffer per leggere la riga
+    char row[256];
+    while()
     
 
     while(running){
