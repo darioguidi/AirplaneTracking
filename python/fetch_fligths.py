@@ -18,9 +18,11 @@ def latlon_to_xyz(lat, lon, alt):
     lat_rad = math.radians(lat)
     lon_rad = math.radians(lon)
     r = 1.0 + alt * 0.0001  # altitudine scalata, globo unitario
-    x = r * math.cos(lat_rad) * math.cos(lon_rad)
-    y = r * math.sin(lat_rad)
-    z = r * math.cos(lat_rad) * math.sin(lon_rad)
+    scale = 200  # moltiplica la sfera per renderla visibile
+    x = r * math.cos(lat_rad) * math.cos(lon_rad) * scale
+    y = r * math.sin(lat_rad) * scale
+    z = r * math.cos(lat_rad) * math.sin(lon_rad) * scale
+
     return x, y, z
 
 with open('data/data.json', mode='r') as infile:
@@ -38,4 +40,5 @@ with open('data/data.json', mode='r') as infile:
 
 with open('data/data.txt', mode='w') as outfile:
     for x, y, z in user_data:
-        outfile.write(f"{x} {y} {z}\n")
+        outfile.write(f"{x},{y},{z}\n")
+

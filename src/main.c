@@ -7,6 +7,14 @@
 
 int main(void)
 {
+    // Dimensioni iniziali della finestra (variabile - window resizable)
+    int window_width = 900;
+    int window_height = 900;
+
+    // Angoli di rotazione
+    float theta = 0.0f;
+    float delta = 0.0f;
+
     if(SDL_Init(SDL_INIT_VIDEO) != 0){
         printf("Errore di setup per SDL\n");
         return 1;
@@ -32,17 +40,11 @@ int main(void)
     // Oggetto SDL per la gestione degli eventi
     SDL_Event event;
 
-    // Variabili
-    int running = 1;
+    // Strighe di comando
     char state[50];
     char comando[100];
 
-    int window_width = 900;
-    int window_height = 900;
-
-    float theta = 0.0f;
-    float delta = 0.0f;
-
+    // Indice per contare i voli
     int number_flights = 0;
 
     // Interazione utente scelta dei fligths da visulaizzare (filtrati per paese)
@@ -54,9 +56,8 @@ int main(void)
     snprintf(comando, sizeof(comando), "python3 python/fetch_fligths.py %s", state);
     system(comando);
 
-    // Lettura del fetch dei dati, associandolo ad un array
+    // Lettura del fetch dei dati per contare il numero di voli
     FILE* data = fopen("data/data.txt", "r");
-
     if(data==NULL){
         printf("Errore in creazione oggetto di tipo FILE\n");
         return 0;
@@ -74,31 +75,39 @@ int main(void)
     fclose(data);
 
     // Alloco lo spazio di memoria per le struct Point dei voli
-    Point* flights = malloc(number_flights*sizeof(Point));
+    Point* flights = malloc(number_flights * sizeof(Point));
+    if(flights == NULL){
+        printf("Errore in allocazione memoria per i voli\n");
+        return 0;
+    }
 
     // Lettura del fetch dei dati, associandolo ad un array
-    FILE* data = fopen("data/data.txt", "r");
-
+    data = fopen("data/data.txt", "r");
     if(data==NULL){
         printf("Errore in creazione oggetto di tipo FILE\n");
+        free(flights);
         return 0;
     }
 
     // Indice
     int i = 0;
-    // Buffer per leggere la riga
-    char row[256];
+
+    // Buffer per leggere la riga (riutilizzo lo stesso buffer)
     while(fgets(row, sizeof(row), data)){
         float x,y,z;
         if(sscanf(row, "%f,%f,%f", &x,&y,&z)==3){
-            flights[i].x=x;
-            flights[i].y=y;
-            flights[i].z=z;
-            flights[i].type='f';
+            flights[i].x = x;
+            flights[i].y = y;
+            flights[i].z = z;
+            flights[i].type = 'f';
+            i++; // incremento dell'indice per popolare correttamente l'array
         }
     }
+
     fclose(data);
 
+
+    int running = 1;
     while(running){
         while(SDL_PollEvent(&event)){
             // Termine del programma
@@ -144,13 +153,14 @@ int main(void)
 
         // Avvio del rendering
         drawEarth(renderer, window_width, window_height, theta, delta);
+        drawFligths(renderer, flights, number_flights, window_width, window_height);
 
         // Presenta il nuovo frame
         SDL_RenderPresent(renderer);
     }
     
     
-
+    free(flights);
     
     // Distruzione di finestra e renderer
     SDL_DestroyWindow(window);
