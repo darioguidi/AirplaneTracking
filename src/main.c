@@ -47,6 +47,10 @@ int main(void)
         snprintf(comando, sizeof(comando), "python3 python/fetch_fligths.py %s", state);
         system(comando);
 
+        // Lettura del fetch dei dati, associandolo ad un array
+        FILE* f = fopne("data/data.json");
+        
+
         while(running){
             while(SDL_PollEvent(&event)){
                 if (event.type == SDL_QUIT){
