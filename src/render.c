@@ -39,10 +39,10 @@ void drawPoint(SDL_Renderer* renderer, Point* point, int window_width, int windo
     SDL_RenderFillRect(renderer, &rect);
 }
 
-void drawEarth(SDL_Renderer* renderer, int window_width, int window_height)
+void drawEarth(SDL_Renderer* renderer, int window_width, int window_height, float user_theta, float user_delta)
 {
     // Numero massimo di punti sulla superficie sferica
-    int max_point_sphere = 500; 
+    int max_point_sphere = 5000; 
     Point* sphere = malloc(max_point_sphere * sizeof(Point));
 
     // Calcolo del raggio e della distanza dalla finestra della sfera
@@ -58,18 +58,26 @@ void drawEarth(SDL_Renderer* renderer, int window_width, int window_height)
 
         float theta = golden_angle * i;
 
+        // Rotazione orizzontale attorno all’asse Y
+        theta += user_theta;
+
         float x = cosf(theta) * radius;
         float z = sinf(theta) * radius;
 
+        // Rotazione verticale attorno all’asse X
+        float new_y = y * cosf(user_delta) - z * sinf(user_delta);
+        float new_z = y * sinf(user_delta) + z * cosf(user_delta);
+
         sphere[i].x = raggio * x;
-        sphere[i].y = raggio * y;
-        sphere[i].z = z_center + raggio * z;
+        sphere[i].y = raggio * new_y;
+        sphere[i].z = z_center + raggio * new_z;
         sphere[i].type = 't';
 
         drawPoint(renderer, &sphere[i], window_width, window_height);
     }
     free(sphere);
 }
+
 
 void drawFligths(SDL_Renderer* renderer)
 {

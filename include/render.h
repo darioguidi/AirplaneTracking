@@ -20,4 +20,4 @@ SDL_Renderer* createRenderer(SDL_Window* window);
 void drawPoint(SDL_Renderer* renderer, Point* point, int window_width, int window_height);
 
 // Disegno del globo
-void drawEarth(SDL_Renderer* renderer, int window_width, int window_height);
+void drawEarth(SDL_Renderer* renderer, int window_width, int window_height, float user_theta, float user_delta);

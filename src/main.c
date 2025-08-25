@@ -40,6 +40,9 @@ int main(void)
     int window_width = 900;
     int window_height = 900;
 
+    float theta = 0.0f;
+    float delta = 0.0f;
+
     // Interazione utente scelta dei fligths da visulaizzare (filtrati per paese)
     printf("Inserire i voli di quale paese visualizzare: \n");
     fgets(state, sizeof(state), stdin);
@@ -64,8 +67,19 @@ int main(void)
 
             // Rotazione della visuale del globo
             if(event.type == SDL_KEYDOWN){
+                if(event.key.keysym.sym == SDLK_a){
+                    // Rotazione Orizzontale
+                    theta += 0.25;
+                }
+                if(event.key.keysym.sym == SDLK_d){
+                    theta -= 0.25;
+                }
                 if(event.key.keysym.sym == SDLK_w){
-                    // 
+                    // Rotazione Verticale
+                    delta += 0.25;
+                }
+                if(event.key.keysym.sym == SDLK_s){
+                    delta -= 0.25;
                 }
             }
 
@@ -86,7 +100,7 @@ int main(void)
         SDL_RenderClear(renderer);
 
         // Avvio del rendering
-        drawEarth(renderer, window_width, window_height);
+        drawEarth(renderer, window_width, window_height, theta, delta);
 
         // Presenta il nuovo frame
         SDL_RenderPresent(renderer);
