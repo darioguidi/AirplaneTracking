@@ -9,14 +9,14 @@ SDL_Renderer* createRenderer(SDL_Window* window)
     return renderer;
 }
 
-void drawPoint(SDL_Renderer* renderer, Point* point)
+void drawPoint(SDL_Renderer* renderer, Point* point, int window_width, int window_height)
 {
     // Traslazione dei punti per centrarli alla finestra
-    float offset_x = WINDOW_WIDTH/2;
-    float offset_y = WINDOW_HEIGHT/2;
+    float offset_x = window_width/2;
+    float offset_y = window_height/2;
 
     // Definizione dei "punti proiettati"
-    float scale = 200.0; // distanza della camera
+    float scale = 200.0; // Distanza della camera
 
     float denom = (point->z / scale + 1.0f);
     if (denom <= 0.1f) denom = 0.1f; 
@@ -30,23 +30,23 @@ void drawPoint(SDL_Renderer* renderer, Point* point)
     SDL_Rect rect = (SDL_Rect){(int)x_delta, (int)y_delta, SIZE_POINT, SIZE_POINT};
 
     // Colore per disegnare il punto e stampa
-    if(point->type="t"){
+    if(point->type=='t'){
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    }else if(point->type="f"){
+    }else if(point->type=='f'){
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     }
 
     SDL_RenderFillRect(renderer, &rect);
 }
 
-void drawEarth(SDL_Renderer* renderer)
+void drawEarth(SDL_Renderer* renderer, int window_width, int window_height)
 {
     // Numero massimo di punti sulla superficie sferica
     int max_point_sphere = 200; 
     Point* sphere = malloc(max_point_sphere * sizeof(Point));
 
     // Calcolo del raggio e della distanza dalla finestra della sfera
-    float raggio = WINDOW_WIDTH / 3.0f;
+    float raggio = window_width / 3.0f;
     float z_center = 300.0f;
 
     // Angolo auereo su cui si basa la sequenza di fibonacci
@@ -64,9 +64,9 @@ void drawEarth(SDL_Renderer* renderer)
         sphere[i].x = raggio * x;
         sphere[i].y = raggio * y;
         sphere[i].z = z_center + raggio * z;
-        sphere[i].type = "e";
+        sphere[i].type = 't';
 
-        drawPoint(renderer, &sphere[i]);
+        drawPoint(renderer, &sphere[i], window_width, window_height);
     }
     free(sphere);
 }

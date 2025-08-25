@@ -17,7 +17,7 @@ typedef struct{
 SDL_Renderer* createRenderer(SDL_Window* window);
 
 // Disegno del singolo punto
-void drawPoint(SDL_Renderer* renderer, Point* point);
+void drawPoint(SDL_Renderer* renderer, Point* point, int window_width, int window_height);
 
 // Disegno del globo
-void drawEarth(SDL_Renderer* renderer);
+void drawEarth(SDL_Renderer* renderer, int window_width, int window_height);

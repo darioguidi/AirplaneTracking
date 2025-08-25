@@ -10,6 +10,9 @@ if len(sys.argv)>1:
 # Dataset, restituisce una Response contenente tutti i fligths, per leggerla come un JSON : dataset.json()
 dataset = requests.get('https://opensky-network.org/api/states/all')
 
+with open("data/data.json", mode="w") as outfile:
+    json.dump(dataset.json(), outfile)
+
 # Lettura del dataset e filtraggio dei voli
 with open('data/data.json', mode='r') as infile:
     
