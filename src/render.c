@@ -42,7 +42,7 @@ void drawPoint(SDL_Renderer* renderer, Point* point, int window_width, int windo
 void drawEarth(SDL_Renderer* renderer, int window_width, int window_height)
 {
     // Numero massimo di punti sulla superficie sferica
-    int max_point_sphere = 200; 
+    int max_point_sphere = 500; 
     Point* sphere = malloc(max_point_sphere * sizeof(Point));
 
     // Calcolo del raggio e della distanza dalla finestra della sfera
