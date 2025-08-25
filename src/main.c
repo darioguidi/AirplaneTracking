@@ -8,8 +8,8 @@
 int main(void)
 {
     // Dimensioni iniziali della finestra (variabile - window resizable)
-    int window_width = 400;
-    int window_height = 400;
+    int window_width = 600;
+    int window_height = 600;
 
     // Angoli di rotazione
     float theta = 0.0f;
@@ -22,7 +22,7 @@ int main(void)
     }
 
     // Creazione della window
-    SDL_Window* window = createWindow();
+    SDL_Window* window = createWindow(window_width, window_height);
 
     if (window == NULL) {
         printf("Errore in apertura della finestra \n");
@@ -49,7 +49,7 @@ int main(void)
     char comando[100];
 
     while(1){
-        printf("MENU' \n - 0 Chiusura applicazione\n - 1 Scelta del paese\n - 2 Mostra Lista dei paesi\n");
+        printf("MENU' \n - 0 Chiusura applicazione\n - 1 Scelta del paese voli da visualizzare\n - 2 Mostra Lista dei paesi con voli attivi\n");
         fgets(input, sizeof(input), stdin);
         choose=atoi(input);
 

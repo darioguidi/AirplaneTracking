@@ -5,4 +5,4 @@
 #define WINDOW_WIDTH 900
 #define WINDOW_HEIGHT 900 
 
-SDL_Window* createWindow (void);
+SDL_Window* createWindow (int window_width, int window_height);
