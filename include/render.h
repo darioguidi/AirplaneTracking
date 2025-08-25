@@ -17,11 +17,10 @@ typedef struct{
 SDL_Renderer* createRenderer(SDL_Window* window);
 
 // Disegno del singolo punto
-void drawPoint(SDL_Renderer* renderer, Point* point, int window_width, int window_height);
+void drawPoint(SDL_Renderer* renderer, Point* point, int window_width, int window_height, float user_theta, float user_delta);
 
 // Disegno del globo
 void drawEarth(SDL_Renderer* renderer, int window_width, int window_height, float user_theta, float user_delta);
 
 // Disegno dei voli
-void drawFligths(SDL_Renderer* renderer, Point* flights, int number_fligths, float window_width, float window_height)
-;
+void drawFligths(SDL_Renderer* renderer, Point* flights, int number_fligths, float window_width, float window_height, float user_theta, float user_delta);

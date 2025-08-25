@@ -9,19 +9,40 @@ SDL_Renderer* createRenderer(SDL_Window* window)
     return renderer;
 }
 
-void drawPoint(SDL_Renderer* renderer, Point* point, int window_width, int window_height)
+void drawPoint(SDL_Renderer* renderer, Point* point, int window_width, int window_height, float user_theta, float user_delta)
 {
+    // Centro della sfera (stesso di drawEarth)
+    float z_center = 300.0f;
+
+    // Sposto il punto rispetto al centro della sfera
+    float x_local = point->x;
+    float y_local = point->y;
+    float z_local = point->z - z_center;
+
+    // Rotazione orizzontale attorno all’asse Y
+    float x_rot = x_local * cosf(user_theta) + z_local * sinf(user_theta);
+    float z_rot = -x_local * sinf(user_theta) + z_local * cosf(user_theta);
+
+    // Rotazione verticale attorno all’asse X
+    float y_rot = y_local * cosf(user_delta) - z_rot * sinf(user_delta);
+    float z_final = y_local * sinf(user_delta) + z_rot * cosf(user_delta);
+
+    // Riporto al sistema globale aggiungendo il centro
+    float x_final = x_rot;
+    float y_final = y_rot;
+    float z_global = z_center + z_final;
+
     // Traslazione dei punti per centrarli alla finestra
     float offset_x = window_width/2;
     float offset_y = window_height/2;
 
     // Definizione dei "punti proiettati"
-    float scale = 200.0; // Distanza della camera
+    float scale = 300.0; // Distanza della camera
 
-    float denom = (point->z / scale + 1.0f);
+    float denom = (z_global / scale + 1.0f);
     if (denom <= 0.1f) denom = 0.1f; 
-    float x_proj = point->x / denom;
-    float y_proj = point->y / denom;
+    float x_proj = x_final / denom;
+    float y_proj = y_final / denom;
 
     float x_delta = x_proj + offset_x;
     float y_delta = -y_proj + offset_y;
@@ -49,7 +70,7 @@ void drawEarth(SDL_Renderer* renderer, int window_width, int window_height, floa
     float raggio = window_width / 3.0f;
     float z_center = 300.0f;
 
-    // Angolo auereo su cui si basa la sequenza di fibonacci
+    // Angolo aureo su cui si basa la sequenza di fibonacci
     const float golden_angle = PI * (3.0f - sqrtf(5.0f));
 
     for (int i = 0; i < max_point_sphere; i++) {
@@ -58,34 +79,22 @@ void drawEarth(SDL_Renderer* renderer, int window_width, int window_height, floa
 
         float theta = golden_angle * i;
 
-        // Rotazione orizzontale attorno all’asse Y
-        theta += user_theta;
-
         float x = cosf(theta) * radius;
         float z = sinf(theta) * radius;
 
-        // Rotazione verticale attorno all’asse X
-        float new_y = y * cosf(user_delta) - z * sinf(user_delta);
-        float new_z = y * sinf(user_delta) + z * cosf(user_delta);
-
         sphere[i].x = raggio * x;
-        sphere[i].y = raggio * new_y;
-        sphere[i].z = z_center + raggio * new_z;
+        sphere[i].y = raggio * y;
+        sphere[i].z = z_center + raggio * z;
         sphere[i].type = 't';
 
-        drawPoint(renderer, &sphere[i], window_width, window_height);
+        drawPoint(renderer, &sphere[i], window_width, window_height, user_theta, user_delta);
     }
     free(sphere);
 }
 
-
-void drawFligths(SDL_Renderer* renderer, Point* flights, int number_fligths, float window_width, float window_height)
+void drawFligths(SDL_Renderer* renderer, Point* flights, int number_fligths, float window_width, float window_height, float user_theta, float user_delta)
 {
     for(int i = 0; i<number_fligths; i++){
-        drawPoint(renderer, &flights[i], window_width, window_height);
+        drawPoint(renderer, &flights[i], window_width, window_height, user_theta, user_delta);
     }
 }
-
-
-
-
