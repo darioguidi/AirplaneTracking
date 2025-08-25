@@ -43,6 +43,8 @@ int main(void)
     float theta = 0.0f;
     float delta = 0.0f;
 
+    int number_flights = 0;
+
     // Interazione utente scelta dei fligths da visulaizzare (filtrati per paese)
     printf("Inserire i voli di quale paese visualizzare: \n");
     fgets(state, sizeof(state), stdin);
@@ -62,8 +64,40 @@ int main(void)
 
     // Buffer per leggere la riga
     char row[256];
-    while()
-    
+    while(fgets(row, sizeof(row), data)){
+        float x,y,z;
+        if(sscanf(row, "%f,%f,%f", &x,&y,&z)==3){
+            number_flights += 1;
+        }
+    }
+
+    fclose(data);
+
+    // Alloco lo spazio di memoria per le struct Point dei voli
+    Point* flights = malloc(number_flights*sizeof(Point));
+
+    // Lettura del fetch dei dati, associandolo ad un array
+    FILE* data = fopen("data/data.txt", "r");
+
+    if(data==NULL){
+        printf("Errore in creazione oggetto di tipo FILE\n");
+        return 0;
+    }
+
+    // Indice
+    int i = 0;
+    // Buffer per leggere la riga
+    char row[256];
+    while(fgets(row, sizeof(row), data)){
+        float x,y,z;
+        if(sscanf(row, "%f,%f,%f", &x,&y,&z)==3){
+            flights[i].x=x;
+            flights[i].y=y;
+            flights[i].z=z;
+            flights[i].type='f';
+        }
+    }
+    fclose(data);
 
     while(running){
         while(SDL_PollEvent(&event)){

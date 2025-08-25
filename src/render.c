@@ -79,8 +79,9 @@ void drawEarth(SDL_Renderer* renderer, int window_width, int window_height, floa
 }
 
 
-void drawFligths(SDL_Renderer* renderer)
+void drawFligths(SDL_Renderer* renderer, Point* flights)
 {
+    
 
 }
 
