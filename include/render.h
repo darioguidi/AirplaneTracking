@@ -4,7 +4,6 @@
 #include "window.h"
 
 #define PI 3.14
-#define SIZE_POINT 2
 
 typedef struct{
     int x;
@@ -23,4 +22,4 @@ void drawPoint(SDL_Renderer* renderer, Point* point, int window_width, int windo
 void drawEarth(SDL_Renderer* renderer, int window_width, int window_height, float user_theta, float user_delta);
 
 // Disegno dei voli
-void drawFligths(SDL_Renderer* renderer, Point* flights, int number_fligths, float window_width, float window_height, float user_theta, float user_delta);
+void drawFligths(SDL_Renderer* renderer, float window_width, float window_height, float user_theta, float user_delta);

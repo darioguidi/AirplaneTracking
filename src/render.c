@@ -13,6 +13,7 @@ void drawPoint(SDL_Renderer* renderer, Point* point, int window_width, int windo
 {
     // Centro della sfera (stesso di drawEarth)
     float z_center = 300.0f;
+    float size_point = 2.0f;
 
     // Sposto il punto rispetto al centro della sfera
     float x_local = point->x;
@@ -47,15 +48,16 @@ void drawPoint(SDL_Renderer* renderer, Point* point, int window_width, int windo
     float x_delta = x_proj + offset_x;
     float y_delta = -y_proj + offset_y;
 
-    // Oggetto SDL forma "Rettangolo"
-    SDL_Rect rect = (SDL_Rect){(int)x_delta, (int)y_delta, SIZE_POINT, SIZE_POINT};
-
     // Colore per disegnare il punto e stampa
     if(point->type=='t'){
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     }else if(point->type=='f'){
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        size_point = 5.0f;
     }
+
+    // Oggetto SDL forma "Rettangolo"
+    SDL_Rect rect = (SDL_Rect){(int)x_delta, (int)y_delta, size_point, size_point};
 
     SDL_RenderFillRect(renderer, &rect);
 }
@@ -92,9 +94,58 @@ void drawEarth(SDL_Renderer* renderer, int window_width, int window_height, floa
     free(sphere);
 }
 
-void drawFligths(SDL_Renderer* renderer, Point* flights, int number_fligths, float window_width, float window_height, float user_theta, float user_delta)
+void drawFligths(SDL_Renderer* renderer, float window_width, float window_height, float user_theta, float user_delta)
 {
-    for(int i = 0; i<number_fligths; i++){
-        drawPoint(renderer, &flights[i], window_width, window_height, user_theta, user_delta);
+    int number_flights = 0;
+
+    // Lettura del fetch dei dati per contare il numero di voli
+    FILE* data = fopen("data/data.txt", "r");
+    if(data==NULL){
+        printf("Errore in creazione oggetto di tipo FILE\n");
     }
+
+    // Buffer per leggere la riga
+    char row[256];
+    while(fgets(row, sizeof(row), data)){
+        float x,y,z;
+        if(sscanf(row, "%f,%f,%f", &x,&y,&z)==3){
+            number_flights += 1;
+        }
+    }
+
+    fclose(data);
+
+    // Alloco lo spazio di memoria per le struct Point dei voli
+    Point* flights = malloc(number_flights * sizeof(Point));
+    if(flights == NULL){
+        printf("Errore in allocazione memoria per i voli\n");
+    }
+
+    // Lettura del fetch dei dati, associandolo ad un array
+    data = fopen("data/data.txt", "r");
+    if(data==NULL){
+        printf("Errore in creazione oggetto di tipo FILE\n");
+        free(flights);
+    }
+
+    // Indice
+    int i = 0;
+
+    // Buffer per leggere la riga (riutilizzo lo stesso buffer)
+    while(fgets(row, sizeof(row), data)){
+        float x,y,z;
+        if(sscanf(row, "%f,%f,%f", &x,&y,&z)==3){
+            flights[i].x = x;
+            flights[i].y = y;
+            flights[i].z = z;
+            flights[i].type = 'f';
+
+            drawPoint(renderer, &flights[i], window_width, window_height, user_theta, user_delta);
+
+            i++; // incremento dell'indice per popolare correttamente l'array 
+        }
+    }
+
+    fclose(data);
+    free(flights);
 }
