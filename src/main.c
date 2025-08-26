@@ -61,9 +61,9 @@ int main(void)
             fgets(state, sizeof(state), stdin);
             state[strcspn(state, "\n")] = '\0';
 
-            // Chiamata allo script python per scaricare i dati interessati
             snprintf(comando, sizeof(comando), "python3 python/fetch_fligths.py %s", state);
-            system(comando);
+            printf("Eseguo: %s\n", comando);
+            system(comando);      // chiamata script python
 
             int running = 1;
             while(running){
@@ -102,19 +102,16 @@ int main(void)
                     }
                 }
 
-                // Imposta colore sfondo
-                SDL_SetRenderDrawColor(renderer,0,0,0,255);
-
-                // Pulisce il frame precedente
+                SDL_SetRenderDrawColor(renderer, 0,0,0,255);
                 SDL_RenderClear(renderer);
 
-                // Avvio del rendering
                 drawEarth(renderer, window_width, window_height, theta, delta);
                 drawFligths(renderer, window_width, window_height, theta, delta);
 
-                // Presenta il nuovo frame
                 SDL_RenderPresent(renderer);
-            }
+
+                SDL_Delay(16); // riduce carico CPU
+                }
         }
     }
 

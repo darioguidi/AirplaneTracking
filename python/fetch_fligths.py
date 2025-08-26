@@ -1,4 +1,5 @@
 import requests
+from requests.auth import HTTPBasicAuth
 import json
 import sys
 import math
@@ -6,7 +7,11 @@ import math
 if len(sys.argv) > 1:
     user_state = str(sys.argv[1])
 
-dataset = requests.get('https://opensky-network.org/api/states/all')
+dataset = requests.get('https://opensky-network.org/api/states/all', auth=HTTPBasicAuth("", ""))
+print("Status:", dataset.status_code)
+print("Headers:", dataset.headers)
+print("Text:", dataset.text[:500])  # primi 500 caratteri
+
 
 with open("data/data.json", mode="w") as outfile:
     json.dump(dataset.json(), outfile)
