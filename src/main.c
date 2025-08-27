@@ -46,7 +46,7 @@ int main(void)
     char input[20];
     int choose;
     char state[50];
-    char comando[100];
+    char comando[512];
 
     while(1){
         printf("MENU' \n - 0 Chiusura applicazione\n - 1 Scelta del paese voli da visualizzare\n - 2 Mostra Lista dei paesi con voli attivi\n");
@@ -61,9 +61,9 @@ int main(void)
             fgets(state, sizeof(state), stdin);
             state[strcspn(state, "\n")] = '\0';
 
-            snprintf(comando, sizeof(comando), "python3 python/fetch_fligths.py %s", state);
+            snprintf(comando, sizeof(comando), "python3 ./python/fetch_fligths.py \"%s\"", state);
             printf("Eseguo: %s\n", comando);
-            system(comando);      // chiamata script python
+            system(comando);      
 
             int running = 1;
             while(running){
