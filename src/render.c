@@ -53,7 +53,7 @@ void drawPoint(SDL_Renderer* renderer, Point* point, int window_width, int windo
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     }else if(point->type=='f'){
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        size_point = 8.0f;
+        size_point = 10.0f;
     }
 
     // Oggetto SDL forma "Rettangolo"

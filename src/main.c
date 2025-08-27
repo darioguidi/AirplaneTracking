@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 #include <SDL2/SDL.h>
 #include "window.h"
 #include "render.h"
@@ -48,6 +49,9 @@ int main(void)
     char state[50];
     char comando[512];
 
+    time_t time_last;
+    time_t time_now;
+
     while(1){
         printf("MENU' \n - 0 Chiusura applicazione\n - 1 Scelta del paese voli da visualizzare\n - 2 Mostra Lista dei paesi con voli attivi\n");
         fgets(input, sizeof(input), stdin);
@@ -63,7 +67,9 @@ int main(void)
 
             snprintf(comando, sizeof(comando), "python3 ./python/fetch_fligths.py \"%s\"", state);
             printf("Eseguo: %s\n", comando);
-            system(comando);      
+            system(comando);
+            
+            time_last = 0;
 
             int running = 1;
             while(running){
@@ -101,6 +107,14 @@ int main(void)
                         SDL_RenderSetLogicalSize(renderer, window_width, window_height);
                     }
                 }
+
+                time(&time_now);
+
+                if ((time_now-time_last) >= 5) {
+                    time_last=time_now;
+                    system(comando);
+                }
+                  
 
                 SDL_SetRenderDrawColor(renderer, 0,0,0,255);
                 SDL_RenderClear(renderer);

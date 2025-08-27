@@ -50,6 +50,8 @@ with open("data/data.json", mode="w") as outfile:
 
 # === 5. Funzione coordinate ===
 def latlon_to_xyz(lat, lon, alt):
+    if lat is None or lon is None:  # aggiunto controllo
+        return None, None, None
     if alt is None:
         alt = 0
     lat_rad = math.radians(lat)
@@ -78,7 +80,10 @@ with open('data/data.json', mode='r') as infile:
             lon = state[5]
             alt = state[7]
             x, y, z = latlon_to_xyz(lat, lon, alt)
-            user_data.append((x, y, z))
+            if x is not None:  # aggiunto controllo per scartare dati invalidi
+                user_data.append((x, y, z))
+            else:
+                print(f"Dati mancanti per aereo {state[0]}: lat={lat}, lon={lon}, alt={alt}")
 
 with open('data/data.txt', mode='w') as outfile:
     for x, y, z in user_data:
