@@ -20,7 +20,6 @@ int main(void)
     int sphere_window_width = window_width - input_window_width;
     int sphere_window_height = window_height;
 
-
     // Angoli di rotazione
     float theta = 0.0f;
     float delta = 0.0f;
@@ -68,82 +67,86 @@ int main(void)
         fgets(input, sizeof(input), stdin);
         choose=atoi(input);
 
-        if(choose==0){
-            return 0;
-        }else if(choose==1){
+        switch (choose){
+            case 0 :
+                return 0;
+            break;
 
-            // Interazione utente scelta dei fligths da visulaizzare (filtrati per paese)
-            printf("Inserire i voli di quale paese visualizzare: \n");
-            fgets(state, sizeof(state), stdin);
-            state[strcspn(state, "\n")] = '\0';
+            case 1:
+                // Interazione utente scelta dei fligths da visulaizzare (filtrati per paese)
+                printf("Inserire i voli di quale paese visualizzare: \n");
+                fgets(state, sizeof(state), stdin);
+                state[strcspn(state, "\n")] = '\0';
 
-            snprintf(comando, sizeof(comando), "python3 ./python/fetch_fligths.py \"%s\"", state);
-            printf("Eseguo: %s\n", comando);
-            system(comando);
+                snprintf(comando, sizeof(comando), "python3 ./python/fetch_fligths.py \"%s\"", state);
+                printf("Eseguo: %s\n", comando);
+                system(comando);
+                
+                time_last = 0;
+
+                int running = 1;
+                while(running){
+                    while(SDL_PollEvent(&event)){
+                        // Termine del programma
+                        if (event.type == SDL_QUIT){
+                            printf("Chiusura del processo \n");
+                            running = 0;
+                        }
+
+                        // Rotazione della visuale del globo
+                        if(event.type == SDL_KEYDOWN){
+                            if(event.key.keysym.sym == SDLK_a){
+                                // Rotazione Orizzontale
+                                theta += 0.05;
+                            }
+                            if(event.key.keysym.sym == SDLK_d){
+                                theta -= 0.05;
+                            }
+                            if(event.key.keysym.sym == SDLK_w){
+                                // Rotazione Verticale
+                                delta += 0.05;
+                            }
+                            if(event.key.keysym.sym == SDLK_s){
+                                delta -= 0.05;
+                            }
+                        }
+
+                        // Resize della finestra ed aggiornamento delle dimensioni
+                        if(event.window.event == SDL_WINDOWEVENT_RESIZED){
+                            window_width = event.window.data1;
+                            window_height = event.window.data2;
+
+                            input_window_width = 300;
+                            input_window_height = window_height;     
+                            
+                            sphere_window_width = window_width - input_window_width;
+                            sphere_window_height = window_height;
+
+                            // Aggiornamento del renderer con lo scaling corretto
+                            SDL_RenderSetLogicalSize(renderer, window_width, window_height);
+                        }
+                    }
+
+                    time(&time_now);
+
+                    if ((time_now-time_last) >= 5) {
+                        time_last=time_now;
+                        system(comando);
+                    }
+                    
+
+                    SDL_SetRenderDrawColor(renderer, 0,0,0,255);
+                    SDL_RenderClear(renderer);
+
+                    drawEarth(renderer, sphere_window_width, sphere_window_height, theta, delta);
+                    drawFligths(renderer, sphere_window_width, sphere_window_height, theta, delta);
+
+                    SDL_RenderPresent(renderer);
+
+                    SDL_Delay(16); 
+                }
+                break;
             
-            time_last = 0;
-
-            int running = 1;
-            while(running){
-                while(SDL_PollEvent(&event)){
-                    // Termine del programma
-                    if (event.type == SDL_QUIT){
-                        printf("Chiusura del processo \n");
-                        running = 0;
-                    }
-
-                    // Rotazione della visuale del globo
-                    if(event.type == SDL_KEYDOWN){
-                        if(event.key.keysym.sym == SDLK_a){
-                            // Rotazione Orizzontale
-                            theta += 0.05;
-                        }
-                        if(event.key.keysym.sym == SDLK_d){
-                            theta -= 0.05;
-                        }
-                        if(event.key.keysym.sym == SDLK_w){
-                            // Rotazione Verticale
-                            delta += 0.05;
-                        }
-                        if(event.key.keysym.sym == SDLK_s){
-                            delta -= 0.05;
-                        }
-                    }
-
-                    // Resize della finestra ed aggiornamento delle dimensioni
-                    if(event.window.event == SDL_WINDOWEVENT_RESIZED){
-                        window_width = event.window.data1;
-                        window_height = event.window.data2;
-
-                        input_window_width = 300;
-                        input_window_height = window_height;     
-                        
-                        sphere_window_width = window_width - input_window_width;
-                        sphere_window_height = window_height;
-
-                        // Aggiornamento del renderer con lo scaling corretto
-                        SDL_RenderSetLogicalSize(renderer, window_width, window_height);
-                    }
-                }
-
-                time(&time_now);
-
-                if ((time_now-time_last) >= 5) {
-                    time_last=time_now;
-                    system(comando);
-                }
-                  
-
-                SDL_SetRenderDrawColor(renderer, 0,0,0,255);
-                SDL_RenderClear(renderer);
-
-                drawEarth(renderer, sphere_window_width, sphere_window_height, theta, delta);
-                drawFligths(renderer, sphere_window_width, sphere_window_height, theta, delta);
-
-                SDL_RenderPresent(renderer);
-
-                SDL_Delay(16); // riduce carico CPU
-                }
         }
     }
 

@@ -12,6 +12,11 @@ typedef struct{
     char type;
 } Point;
 
+typedef struct {
+    SDL_Texture* text;
+    SDL_Rect dest;
+} Text;
+
 // Creazione della finestra
 SDL_Renderer* createRenderer(SDL_Window* window);
 
