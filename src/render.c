@@ -11,45 +11,59 @@ SDL_Renderer* createRenderer(SDL_Window* window)
 
 void drawPoint(SDL_Renderer* renderer, Point* point, int window_width, int window_height, float user_theta, float user_delta)
 {
+    // Grandezza punti della "Terra"
+    float size_point;
+
+    // Distanza della sfera dalla visuale
     float center = 300.0f;
 
+    // Coordinate del punto 
     float x = point->x;
     float y = point->y;
     float z = point->z - center;
     
     // Trasformazione
 
-    // Rotazione
+    // Rotazione per l'asse delle X
+    float x_rot = x * cosf(user_theta) + z * sinf(user_theta);
+    float z_rot = -x * sinf(user_theta) + z * cosf(user_theta);
+    x = x_rot;
+    z = z_rot;
 
-
-    // Taslazione per l'asse delle X
-    x = x * cosf(user_theta) + z * sinf(user_theta);
-    z = -x * sinf(user_theta) + z * cosf(user_theta);
-
-    // Trasformazione per l'asse delle Y 
-    y = y * cosf(user_delta) + z * sinf(user_delta);
-    z = -y * sinf(user_delta) + z * cosf(user_delta);
-    z += center;
+    // Rotazione per l'asse delle Y 
+    float y_rot = y * cosf(user_delta) + z * sinf(user_delta);
+    z_rot = -y * sinf(user_delta) + z * cosf(user_delta);
+    y = y_rot;
+    z = z_rot + center;
 
     // Calcolo del offset dei punti
-    float offset_x = window_width/2;
-    float offset_y = window_height/2;
+    float offset_x = window_width / 2;
+    float offset_y = window_height / 2;
 
-    // Grandezza punti della "Terra"
-    float size_point = 2.0f;
+    // Proiezione prospettica
+    float scale = 300.0f; // distanza della camera
+    float denom = 1.0f + z / scale;
+    if (denom <= 0.1f) denom = 0.1f;
+    float x_proj = x / denom;
+    float y_proj = y / denom;
+
+    float screen_x = x_proj + offset_x;
+    float screen_y = -y_proj + offset_y;  
 
     // Distinzione dei punti per tipologia
-    if(strcmp(point->type, 't')==0){
-        size_point=2.0f;
-        SDL_SetRenderDrawColor(renderer,255,255,255,255);
-    }else if(strcmp(point->type, 'f')==0){
+    if (point->type == 't'){
+        size_point = 2.0f;
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    } else if (point->type == 'f'){
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
         size_point = 10.0f;
     }
+
     // Creazione e Stampa del rect
-    SDL_Rect rect = (SDL_Rect){(int)point->x, (int)point->y, size_point, size_point};
+    SDL_Rect rect = (SDL_Rect){(int)screen_x, (int)screen_y, size_point, size_point};
     SDL_RenderFillRect(renderer, &rect);
 }
+
 
 void drawEarth(SDL_Renderer* renderer, int window_width, int window_height, float user_theta, float user_delta)
 {
@@ -131,7 +145,7 @@ void drawFligths(SDL_Renderer* renderer, float window_width, float window_height
 
             drawPoint(renderer, &flights[i], window_width, window_height, user_theta, user_delta);
 
-            i++; // incremento dell'indice per popolare correttamente l'array 
+            i++; 
         }
     }
 

@@ -13,6 +13,8 @@ SDL_Window* createWindow (int window_width, int window_height)
         SDL_WINDOW_RESIZABLE
     );
 
+    SDL_SetWindowMinimumSize(window, 900, 600);
+
     return window;
 }
 
