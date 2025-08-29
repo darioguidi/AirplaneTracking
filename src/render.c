@@ -11,54 +11,43 @@ SDL_Renderer* createRenderer(SDL_Window* window)
 
 void drawPoint(SDL_Renderer* renderer, Point* point, int window_width, int window_height, float user_theta, float user_delta)
 {
-    // Centro della sfera (stesso di drawEarth)
-    float z_center = 300.0f;
-    float size_point = 2.0f;
+    float center = 300.0f;
 
-    // Sposto il punto rispetto al centro della sfera
-    float x_local = point->x;
-    float y_local = point->y;
-    float z_local = point->z - z_center;
+    float x = point->x;
+    float y = point->y;
+    float z = point->z - center;
+    
+    // Trasformazione
 
-    // Rotazione orizzontale attorno all’asse Y
-    float x_rot = x_local * cosf(user_theta) + z_local * sinf(user_theta);
-    float z_rot = -x_local * sinf(user_theta) + z_local * cosf(user_theta);
+    // Rotazione
 
-    // Rotazione verticale attorno all’asse X
-    float y_rot = y_local * cosf(user_delta) - z_rot * sinf(user_delta);
-    float z_final = y_local * sinf(user_delta) + z_rot * cosf(user_delta);
 
-    // Riporto al sistema globale aggiungendo il centro
-    float x_final = x_rot;
-    float y_final = y_rot;
-    float z_global = z_center + z_final;
+    // Taslazione per l'asse delle X
+    x = x * cosf(user_theta) + z * sinf(user_theta);
+    z = -x * sinf(user_theta) + z * cosf(user_theta);
 
-    // Traslazione dei punti per centrarli alla finestra
+    // Trasformazione per l'asse delle Y 
+    y = y * cosf(user_delta) + z * sinf(user_delta);
+    z = -y * sinf(user_delta) + z * cosf(user_delta);
+    z += center;
+
+    // Calcolo del offset dei punti
     float offset_x = window_width/2;
     float offset_y = window_height/2;
 
-    // Definizione dei "punti proiettati"
-    float scale = 300.0; // Distanza della camera
+    // Grandezza punti della "Terra"
+    float size_point = 2.0f;
 
-    float denom = (z_global / scale + 1.0f);
-    if (denom <= 0.1f) denom = 0.1f; 
-    float x_proj = x_final / denom;
-    float y_proj = y_final / denom;
-
-    float x_delta = x_proj + offset_x;
-    float y_delta = -y_proj + offset_y;
-
-    // Colore per disegnare il punto e stampa
-    if(point->type=='t'){
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    }else if(point->type=='f'){
+    // Distinzione dei punti per tipologia
+    if(strcmp(point->type, 't')==0){
+        size_point=2.0f;
+        SDL_SetRenderDrawColor(renderer,255,255,255,255);
+    }else if(strcmp(point->type, 'f')==0){
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
         size_point = 10.0f;
     }
-
-    // Oggetto SDL forma "Rettangolo"
-    SDL_Rect rect = (SDL_Rect){(int)x_delta, (int)y_delta, size_point, size_point};
-
+    // Creazione e Stampa del rect
+    SDL_Rect rect = (SDL_Rect){(int)point->x, (int)point->y, size_point, size_point};
     SDL_RenderFillRect(renderer, &rect);
 }
 

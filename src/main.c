@@ -9,8 +9,17 @@
 int main(void)
 {
     // Dimensioni iniziali della finestra (variabile - window resizable)
-    int window_width = 600;
+    int window_width = 900;
     int window_height = 600;
+
+    // Dimensioni riquadro input ed output
+    int input_window_width = 300;
+    int input_window_height = window_height;
+
+    // Dimensioni sezione contenente il video della sfera
+    int sphere_window_width = window_width - input_window_width;
+    int sphere_window_height = window_height;
+
 
     // Angoli di rotazione
     float theta = 0.0f;
@@ -43,9 +52,11 @@ int main(void)
     // Oggetto SDL per la gestione degli eventi
     SDL_Event event;
 
-    // Strighe di comando
+    // Strighe di comando per leggere la voce del menù
     char input[20];
     int choose;
+
+    // Stringhe per comporre la richiesta al system
     char state[50];
     char comando[512];
 
@@ -60,6 +71,7 @@ int main(void)
         if(choose==0){
             return 0;
         }else if(choose==1){
+
             // Interazione utente scelta dei fligths da visulaizzare (filtrati per paese)
             printf("Inserire i voli di quale paese visualizzare: \n");
             fgets(state, sizeof(state), stdin);
@@ -84,17 +96,17 @@ int main(void)
                     if(event.type == SDL_KEYDOWN){
                         if(event.key.keysym.sym == SDLK_a){
                             // Rotazione Orizzontale
-                            theta += 0.25;
+                            theta += 0.05;
                         }
                         if(event.key.keysym.sym == SDLK_d){
-                            theta -= 0.25;
+                            theta -= 0.05;
                         }
                         if(event.key.keysym.sym == SDLK_w){
                             // Rotazione Verticale
-                            delta += 0.25;
+                            delta += 0.05;
                         }
                         if(event.key.keysym.sym == SDLK_s){
-                            delta -= 0.25;
+                            delta -= 0.05;
                         }
                     }
 
@@ -102,6 +114,12 @@ int main(void)
                     if(event.window.event == SDL_WINDOWEVENT_RESIZED){
                         window_width = event.window.data1;
                         window_height = event.window.data2;
+
+                        input_window_width = 300;
+                        input_window_height = window_height;     
+                        
+                        sphere_window_width = window_width - input_window_width;
+                        sphere_window_height = window_height;
 
                         // Aggiornamento del renderer con lo scaling corretto
                         SDL_RenderSetLogicalSize(renderer, window_width, window_height);
@@ -119,8 +137,8 @@ int main(void)
                 SDL_SetRenderDrawColor(renderer, 0,0,0,255);
                 SDL_RenderClear(renderer);
 
-                drawEarth(renderer, window_width, window_height, theta, delta);
-                drawFligths(renderer, window_width, window_height, theta, delta);
+                drawEarth(renderer, sphere_window_width, sphere_window_height, theta, delta);
+                drawFligths(renderer, sphere_window_width, sphere_window_height, theta, delta);
 
                 SDL_RenderPresent(renderer);
 
